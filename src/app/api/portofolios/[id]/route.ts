@@ -5,10 +5,11 @@ const prisma = new PrismaClient();
 
 export async function PUT(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
     ) {
     try {
-        const id = parseInt(params.id);
+        const { id } = await params;
+        const parsedId = parseInt(id);
         const body = await request.json();
 
         const {
@@ -23,21 +24,21 @@ export async function PUT(
         } = body;
 
         if (!title || !description || !category) {
-        return new NextResponse('Missing required fields', { status: 400 });
+            return new NextResponse('Missing required fields', { status: 400 });
         }
 
         const portfolio = await prisma.portfolio.update({
-        where: { id },
-        data: {
-            title,
-            description,
-            technologies: technologies || [],
-            category,
-            imageUrls: imageUrls || [],
-            projectUrl: projectUrl || null,
-            githubUrl: githubUrl || null,
-            isActive
-        }
+            where: { id: parsedId },
+            data: {
+                title,
+                description,
+                technologies: technologies || [],
+                category,
+                imageUrls: imageUrls || [],
+                projectUrl: projectUrl || null,
+                githubUrl: githubUrl || null,
+                isActive
+            }
         });
 
         return NextResponse.json(portfolio);
@@ -49,13 +50,14 @@ export async function PUT(
 
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
     ) {
     try {
-        const id = parseInt(params.id);
+        const { id } = await params;
+        const parsedId = parseInt(id);
 
         await prisma.portfolio.delete({
-        where: { id }
+            where: { id: parsedId }
         });
 
         return new NextResponse('Portfolio deleted successfully', { status: 200 });
