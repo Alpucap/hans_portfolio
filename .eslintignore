@@ -1,0 +1,6 @@
+# Generated files
+.next/
+src/generated/
+generated/
+**/generated/**
+**/.next/**
