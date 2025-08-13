@@ -154,7 +154,7 @@ export default function Home() {
                             {skills.map((item) =>
                             item.link ? (
                                 <Link href={item.link} key={item.id} className="block">
-                                <div className="p-8 bg-gray-900 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 border border-gray-700">
+                                <div className="p-8 bg-gray-900 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 border border-gray-700">
                                     <h3 className="text-2xl font-bold text-blue-400 mb-4 text-center">{item.title}</h3>
                                     <p className="text-gray-300 text-lg">{item.skills}</p>
                                 </div>
@@ -162,7 +162,7 @@ export default function Home() {
                             ) : (
                                 <div
                                 key={item.id}
-                                className="p-8 bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 border border-gray-700"
+                                className="p-8 bg-gray-800 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 border border-gray-700"
                                 >
                                 <h3 className="text-2xl font-bold text-blue-400 mb-4 text-center">{item.title}</h3>
                                 <p className="text-gray-300 text-lg">{item.skills}</p>

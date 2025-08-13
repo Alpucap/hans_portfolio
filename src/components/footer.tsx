@@ -124,7 +124,7 @@ export default function Footer() {
                                         href={social.href}
                                         onClick={(e) => handleSocialClick(e, social.href)}
                                         className={`
-                                            relative w-12 h-12 rounded-xl flex items-center justify-center 
+                                            relative w-12 h-12 rounded-lg flex items-center justify-center 
                                             bg-gray-800/50 backdrop-blur-sm border border-gray-700/50
                                             transition-all duration-300 ease-out
                                             hover:scale-110 hover:rotate-3 hover:shadow-lg
