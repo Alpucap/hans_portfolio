@@ -6,8 +6,15 @@ import { useEffect, useState } from "react";
 export default function Navbar() {
     const [scrollY, setScrollY] = useState(0);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isHomepage, setIsHomepage] = useState(false);
 
     useEffect(() => {
+        // Set isHomepage hanya di client
+        setIsHomepage(
+            window.location.pathname === '/' || window.location.pathname === '/index.html'
+        );
+
+        // Listener scroll
         const handleScroll = () => {
             requestAnimationFrame(() => {
                 setScrollY(window.scrollY);
@@ -29,12 +36,14 @@ export default function Navbar() {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
 
+    const navItems = ["About", "Portfolio", "Experiences", "Contact"];
+
     return (
         <nav
             className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
             style={{
                 backgroundColor:
-                    scrollY > 50 ? "rgba(17, 24, 39, 0.95)" : "transparent", 
+                    scrollY > 50 ? "rgba(17, 24, 39, 0.95)" : "transparent",
                 backdropFilter: scrollY > 50 ? "blur(10px)" : "none",
                 borderBottom: scrollY > 50 ? "1px solid rgba(255, 255, 255, 0.1)" : "none"
             }}
@@ -42,38 +51,53 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-6 py-4">
                 <div className="flex items-center justify-between">
                     <Link href="/" passHref>
-                    <span
-                        className={`text-2xl font-bold cursor-pointer transition-colors duration-300 ${
-                        scrollY > 50 ? "text-blue-400" : "text-white"
-                        }`}
-                    >
-                        HCH
-                    </span>
+                        <span
+                            className={`text-2xl font-bold cursor-pointer transition-colors duration-300 ${
+                                scrollY > 50 ? "text-blue-400" : "text-white"
+                            }`}
+                        >
+                            HCH
+                        </span>
                     </Link>
+
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center space-x-8">
-                        {["About", "Projects", "Experiences", "Contact"].map((item) => (
-                            <a
-                                key={item}
-                                href={`#${item.toLowerCase()}`}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    handleNavClick(item);
-                                }}
-                                className={`text-sm font-medium transition-all duration-300 ${
-                                    scrollY > 50 
-                                        ? "text-gray-300 hover:text-blue-400" 
-                                        : "text-gray-200 hover:text-white"
-                                } relative group`}
-                            >
-                                {item}
-                                <span className={`absolute left-0 -bottom-1 h-0.5 bg-blue-400 transition-all duration-300 ${
-                                    scrollY > 50 ? "w-0 group-hover:w-full" : "w-0"
-                                }`}></span>
-                            </a>
-                        ))}
+                        {navItems.map((item) => {
+                            const getHref = () => {
+                                if (item === "Portfolio") {
+                                    return "/portofolio";
+                                }
+                                return isHomepage ? `#${item.toLowerCase()}` : `/#${item.toLowerCase()}`;
+                            };
+
+                            return (
+                                <a
+                                    key={item}
+                                    href={getHref()}
+                                    onClick={(e) => {
+                                        if (item === "Portfolio") return;
+                                        if (isHomepage) {
+                                            e.preventDefault();
+                                            handleNavClick(item);
+                                        }
+                                    }}
+                                    className={`text-sm font-medium transition-all duration-300 ${
+                                        scrollY > 50
+                                            ? "text-gray-300 hover:text-blue-400"
+                                            : "text-gray-200 hover:text-white"
+                                    } relative group`}
+                                >
+                                    {item}
+                                    <span
+                                        className={`absolute left-0 -bottom-1 h-0.5 bg-blue-400 transition-all duration-300 ${
+                                            scrollY > 50 ? "w-0 group-hover:w-full" : "w-0"
+                                        }`}
+                                    ></span>
+                                </a>
+                            );
+                        })}
                     </div>
-                    
+
                     {/* Hamburger Button */}
                     <button
                         onClick={toggleMobileMenu}
@@ -82,12 +106,12 @@ export default function Navbar() {
                         }`}
                         aria-label="Toggle mobile menu"
                     >
-                        <svg 
+                        <svg
                             className={`w-6 h-6 transition-transform duration-300 ${
                                 isMobileMenuOpen ? 'rotate-90' : ''
-                            }`} 
-                            fill="none" 
-                            stroke="currentColor" 
+                            }`}
+                            fill="none"
+                            stroke="currentColor"
                             viewBox="0 0 24 24"
                         >
                             {isMobileMenuOpen ? (
@@ -98,31 +122,47 @@ export default function Navbar() {
                         </svg>
                     </button>
                 </div>
-                
+
                 {/* Mobile Menu */}
-                <div className={`md:hidden transition-all duration-300 overflow-hidden ${
-                    isMobileMenuOpen 
-                        ? 'max-h-64 opacity-100 mt-4' 
-                        : 'max-h-0 opacity-0'
-                }`}>
+                <div
+                    className={`md:hidden transition-all duration-300 overflow-hidden ${
+                        isMobileMenuOpen ? 'max-h-64 opacity-100 mt-4' : 'max-h-0 opacity-0'
+                    }`}
+                >
                     <div className="py-2 space-y-2">
-                        {["About", "Projects", "Experiences", "Contact"].map((item) => (
-                            <a
-                                key={item}
-                                href={`#${item.toLowerCase()}`}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    handleNavClick(item);
-                                }}
-                                className={`block px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg ${
-                                    scrollY > 50 
-                                        ? "text-gray-300 hover:text-blue-400 hover:bg-gray-800" 
-                                        : "text-gray-200 hover:text-white hover:bg-white hover:bg-opacity-10"
-                                }`}
-                            >
-                                {item}
-                            </a>
-                        ))}
+                        {navItems.map((item) => {
+                            const getHref = () => {
+                                if (item === "Portfolio") {
+                                    return "/portofolio";
+                                }
+                                return isHomepage ? `#${item.toLowerCase()}` : `/#${item.toLowerCase()}`;
+                            };
+
+                            return (
+                                <a
+                                    key={item}
+                                    href={getHref()}
+                                    onClick={(e) => {
+                                        if (item === "Portfolio") {
+                                            setIsMobileMenuOpen(false);
+                                            return;
+                                        }
+                                        if (isHomepage) {
+                                            e.preventDefault();
+                                            handleNavClick(item);
+                                        }
+                                        setIsMobileMenuOpen(false);
+                                    }}
+                                    className={`block px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg ${
+                                        scrollY > 50
+                                            ? "text-gray-300 hover:text-blue-400 hover:bg-gray-800"
+                                            : "text-gray-200 hover:text-white hover:bg-white hover:bg-opacity-10"
+                                    }`}
+                                >
+                                    {item}
+                                </a>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
